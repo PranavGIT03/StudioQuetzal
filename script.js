@@ -49,6 +49,36 @@ const observer = new IntersectionObserver((entries) => {
 
 fadeEls.forEach(el => observer.observe(el));
 
+// ── Keep hyphens upright inside italic text ───────────────────────────────────
+// Walks text nodes inside em/blockquote/anything set italic and wraps each
+// ' - ' in a font-style:normal span so the hyphen never slants with the text.
+(function () {
+  function uprightHyphens(root) {
+    const walker = document.createTreeWalker(root, NodeFilter.SHOW_TEXT, null);
+    const nodes = [];
+    let n;
+    while ((n = walker.nextNode())) {
+      if (n.textContent.includes(' - ')) nodes.push(n);
+    }
+    nodes.forEach(function (textNode) {
+      const parts = textNode.textContent.split(' - ');
+      if (parts.length < 2) return;
+      const frag = document.createDocumentFragment();
+      parts.forEach(function (part, i) {
+        frag.appendChild(document.createTextNode(part));
+        if (i < parts.length - 1) {
+          const s = document.createElement('span');
+          s.style.fontStyle = 'normal';
+          s.textContent = ' - ';
+          frag.appendChild(s);
+        }
+      });
+      textNode.parentNode.replaceChild(frag, textNode);
+    });
+  }
+  document.querySelectorAll('em, i, blockquote, [style*="italic"]').forEach(uprightHyphens);
+}());
+
 // ── Lightbox for expertise visuals ───────────────────────────────────────────
 (function () {
   const visuals = document.querySelectorAll('.expertise-detail-visual');
