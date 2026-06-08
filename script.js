@@ -49,15 +49,55 @@ const observer = new IntersectionObserver((entries) => {
 
 fadeEls.forEach(el => observer.observe(el));
 
-// Contact form submission (placeholder)
+// Contact form — POST to backend API
+// After deploying the backend, replace this URL with your live API URL.
+const BACKEND_URL = 'http://localhost:3000';
+
 const contactForm = document.querySelector('.contact-form');
 if (contactForm) {
-  contactForm.addEventListener('submit', (e) => {
+  contactForm.addEventListener('submit', async (e) => {
     e.preventDefault();
     const btn = contactForm.querySelector('button[type="submit"]');
-    btn.textContent = 'Message Sent';
-    btn.style.background = '#1A1714';
-    btn.style.color = '#C4A35A';
+    const original = btn.textContent;
+
+    btn.textContent = 'Sending…';
     btn.disabled = true;
+
+    try {
+      const res = await fetch(`${BACKEND_URL}/api/contact`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          name:    contactForm.name.value,
+          email:   contactForm.email.value,
+          phone:   contactForm.phone.value,
+          company: contactForm.company.value,
+          service: contactForm.service.value,
+          details: contactForm.details.value,
+        }),
+      });
+
+      const data = await res.json();
+
+      if (res.ok) {
+        btn.textContent = 'Enquiry Sent';
+        btn.style.background = '#1A1714';
+        btn.style.color = '#C4A35A';
+        const msg = document.createElement('p');
+        msg.textContent = data.message;
+        msg.style.cssText = 'color:#C4A35A;margin-top:1rem;font-size:0.875rem;';
+        contactForm.appendChild(msg);
+        contactForm.reset();
+      } else {
+        const errors = data.errors || [data.error || 'Something went wrong.'];
+        alert(Array.isArray(errors) ? errors.join('\n') : errors);
+        btn.textContent = original;
+        btn.disabled = false;
+      }
+    } catch {
+      alert('Network error — please check your connection and try again.');
+      btn.textContent = original;
+      btn.disabled = false;
+    }
   });
 }
