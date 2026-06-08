@@ -49,6 +49,102 @@ const observer = new IntersectionObserver((entries) => {
 
 fadeEls.forEach(el => observer.observe(el));
 
+// ── Hero particle background ──────────────────────────────────────────────────
+(function () {
+  const hero = document.querySelector('.hero');
+  if (!hero) return;
+
+  // Honour reduced-motion preference
+  if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+
+  const canvas = document.createElement('canvas');
+  canvas.setAttribute('aria-hidden', 'true');
+  canvas.style.cssText =
+    'position:absolute;inset:0;width:100%;height:100%;pointer-events:none;z-index:1;';
+  hero.insertBefore(canvas, hero.firstChild);
+
+  const ctx = canvas.getContext('2d');
+  const isMobile = () => window.innerWidth < 768;
+  let particles = [];
+  let raf;
+
+  function resize() {
+    canvas.width  = hero.offsetWidth;
+    canvas.height = hero.offsetHeight;
+  }
+
+  function Particle(initial) {
+    this.reset(initial);
+  }
+
+  Particle.prototype.reset = function (initial) {
+    this.x       = Math.random() * canvas.width;
+    this.y       = initial ? Math.random() * canvas.height : canvas.height + 10;
+    this.r       = Math.random() * 1.6 + 0.4;       // radius 0.4–2px
+    this.speed   = Math.random() * 0.35 + 0.08;     // slow upward drift
+    this.drift   = (Math.random() - 0.5) * 0.25;    // slight horizontal sway
+    this.alpha   = Math.random() * 0.38 + 0.08;     // very subtle
+    this.glow    = this.r > 1.2;                    // larger particles glow
+  };
+
+  Particle.prototype.update = function () {
+    this.y -= this.speed;
+    this.x += this.drift;
+    if (this.y < -10) this.reset(false);
+  };
+
+  Particle.prototype.draw = function () {
+    ctx.save();
+    ctx.globalAlpha = this.alpha;
+    if (this.glow) {
+      ctx.shadowColor = '#C4A35A';
+      ctx.shadowBlur  = this.r * 5;
+    }
+    ctx.fillStyle = '#C4A35A';
+    ctx.beginPath();
+    ctx.arc(this.x, this.y, this.r, 0, Math.PI * 2);
+    ctx.fill();
+    ctx.restore();
+  };
+
+  function init() {
+    resize();
+    const count = isMobile() ? 35 : 70;
+    particles = Array.from({ length: count }, () => new Particle(true));
+  }
+
+  function animate() {
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+    particles.forEach(p => { p.update(); p.draw(); });
+    raf = requestAnimationFrame(animate);
+  }
+
+  // Pause when hero scrolls out of view (performance)
+  const heroObserver = new IntersectionObserver(entries => {
+    if (entries[0].isIntersecting) {
+      if (!raf) raf = requestAnimationFrame(animate);
+    } else {
+      cancelAnimationFrame(raf);
+      raf = null;
+    }
+  }, { threshold: 0 });
+  heroObserver.observe(hero);
+
+  let resizeTimer;
+  window.addEventListener('resize', () => {
+    clearTimeout(resizeTimer);
+    resizeTimer = setTimeout(() => {
+      cancelAnimationFrame(raf);
+      raf = null;
+      init();
+      raf = requestAnimationFrame(animate);
+    }, 200);
+  });
+
+  init();
+  raf = requestAnimationFrame(animate);
+}());
+
 // Contact form — POST to backend API
 // After deploying the backend, replace this URL with your live API URL.
 const BACKEND_URL = 'http://localhost:3000';

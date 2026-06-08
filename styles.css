@@ -273,7 +273,7 @@ img { max-width: 100%; display: block; }
   width: 100%;
   max-width: 1180px;
   margin: 0 auto;
-  padding: 120px 40px 80px;
+  padding: 120px 40px 140px;
   text-align: center;
 }
 
@@ -1237,6 +1237,12 @@ img { max-width: 100%; display: block; }
   .expertise-detail:nth-child(even) .expertise-detail-content { order: unset; }
   .mv-grid { grid-template-columns: 1fr; }
   .process-grid { grid-template-columns: repeat(2, 1fr); }
+
+  /* Portrait visuals in single-column collapse to sensible heights */
+  .about-visual { max-height: 340px; }
+  .founder-portrait { max-height: 340px; }
+  /* Landscape expertise visual is less extreme but still capped */
+  .expertise-detail-visual { max-height: 300px; }
 }
 
 @media (max-width: 768px) {
@@ -1269,12 +1275,25 @@ img { max-width: 100%; display: block; }
   .client-categories,
   .process-grid { grid-template-columns: 1fr; }
 
+  /* Reduce internal card padding in single-column layout */
+  .feature-card { padding: 30px 22px; }
+  .expertise-card { padding: 30px 22px; }
+
   .footer-grid { grid-template-columns: 1fr; gap: 32px; }
 
   .footer-bottom { flex-direction: column; gap: 8px; text-align: center; }
   .footer-bottom-links { justify-content: center; }
 
+  /* Hero: match container gutter, increase bottom to clear scroll indicator */
+  .hero-content { padding: 100px 22px 150px; }
+
+  /* Inner page heroes: reduce excessive top padding on small screens */
+  .page-hero { padding: 130px 0 60px; }
+
   .hero-actions { flex-direction: column; align-items: center; }
+  /* Full-width buttons on mobile — larger tap targets (Fitts's Law) */
+  .hero-actions .btn { width: 100%; text-align: center; }
+
   .form-row { grid-template-columns: 1fr; }
 
   .contact-form-block { padding: 32px 22px; }
@@ -1286,4 +1305,9 @@ img { max-width: 100%; display: block; }
 
   .mv-grid { grid-template-columns: 1fr; }
   .mv-block { padding: 38px 28px; }
+}
+
+/* Hide scroll indicator on very short viewports where it would always overlap */
+@media (max-height: 660px) {
+  .scroll-hint { display: none; }
 }
