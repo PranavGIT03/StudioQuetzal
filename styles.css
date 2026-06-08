@@ -1074,8 +1074,10 @@ img { max-width: 100%; display: block; }
   padding: 16px 28px;
   display: flex;
   align-items: center;
+  justify-content: center;
   gap: 1.4rem;
   flex-shrink: 0;
+  text-align: center;
 }
 
 .case-stat-num {
@@ -1232,6 +1234,12 @@ img { max-width: 100%; display: block; }
   display: flex;
   flex-direction: column;
   justify-content: center;
+  align-items: flex-start;
+}
+
+.case-content .btn {
+  align-self: center;
+  margin-top: 1rem;
 }
 
 .case-content h3 { margin-bottom: 0.3rem; }
