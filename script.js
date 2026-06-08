@@ -49,6 +49,56 @@ const observer = new IntersectionObserver((entries) => {
 
 fadeEls.forEach(el => observer.observe(el));
 
+// ── Lightbox for expertise visuals ───────────────────────────────────────────
+(function () {
+  const visuals = document.querySelectorAll('.expertise-detail-visual');
+  if (!visuals.length) return;
+
+  const overlay = document.createElement('div');
+  overlay.className = 'lightbox-overlay';
+  overlay.setAttribute('role', 'dialog');
+  overlay.setAttribute('aria-modal', 'true');
+  overlay.setAttribute('aria-label', 'Expanded view');
+  overlay.innerHTML = `
+    <button class="lightbox-close-btn" aria-label="Close">&#x2715;</button>
+    <div class="lightbox-inner-content"></div>
+  `;
+  document.body.appendChild(overlay);
+
+  const closeBtn = overlay.querySelector('.lightbox-close-btn');
+  const innerContent = overlay.querySelector('.lightbox-inner-content');
+  let lastFocused;
+
+  function open(visual) {
+    lastFocused = document.activeElement;
+    const src = visual.querySelector('.expertise-detail-visual-inner');
+    innerContent.innerHTML = src ? src.innerHTML : '';
+    overlay.classList.add('open');
+    document.body.style.overflow = 'hidden';
+    closeBtn.focus();
+  }
+
+  function close() {
+    overlay.classList.remove('open');
+    document.body.style.overflow = '';
+    if (lastFocused) lastFocused.focus();
+  }
+
+  visuals.forEach(v => {
+    v.setAttribute('tabindex', '0');
+    v.setAttribute('role', 'button');
+    v.setAttribute('aria-haspopup', 'dialog');
+    v.addEventListener('click', () => open(v));
+    v.addEventListener('keydown', e => {
+      if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); open(v); }
+    });
+  });
+
+  overlay.addEventListener('click', e => { if (e.target === overlay) close(); });
+  closeBtn.addEventListener('click', close);
+  document.addEventListener('keydown', e => { if (e.key === 'Escape') close(); });
+}());
+
 // ── Hero particle background ──────────────────────────────────────────────────
 (function () {
   const hero = document.querySelector('.hero');

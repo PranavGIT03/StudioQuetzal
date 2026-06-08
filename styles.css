@@ -936,8 +936,7 @@ img { max-width: 100%; display: block; }
 .expertise-benefits li {
   font-size: 0.82rem;
   color: var(--muted);
-  padding: 0.5rem 0;
-  border-bottom: 1px solid var(--border);
+  padding: 0.4rem 0;
   display: flex;
   align-items: center;
   gap: 0.8rem;
@@ -950,8 +949,6 @@ img { max-width: 100%; display: block; }
   background: var(--gold);
   flex-shrink: 0;
 }
-
-.expertise-benefits li:first-child { border-top: 1px solid var(--border); }
 
 .projects-label {
   font-size: 0.62rem;
@@ -1007,11 +1004,9 @@ img { max-width: 100%; display: block; }
   font-family: 'Cormorant Garamond', serif;
   font-size: 1.15rem;
   color: var(--warm-white);
-  padding: 0.55rem 0;
-  border-bottom: 1px solid var(--border-dark);
+  padding: 0.4rem 0;
   transition: color 0.3s ease, padding-left 0.3s ease;
 }
-.client-name-list li:last-child { border-bottom: none; }
 .client-name-list li:hover { color: var(--gold); padding-left: 6px; }
 
 /* Case Studies */
@@ -1030,26 +1025,205 @@ img { max-width: 100%; display: block; }
   background: var(--black-soft);
   min-height: 420px;
   display: flex;
-  align-items: center;
-  justify-content: center;
   flex-direction: column;
-  gap: 0.6rem;
   position: relative;
+  overflow: hidden;
 }
 
-.case-metric-number {
+/* Photo placeholder fills the visual */
+.case-photo-bg {
+  flex: 1;
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.case-photo-label {
+  font-size: 0.58rem;
+  letter-spacing: 0.32em;
+  text-transform: uppercase;
+  color: rgba(196,163,90,0.28);
+  font-weight: 500;
+}
+
+/* Each study gets a distinct lighting-scene gradient */
+.case-study-block:nth-child(1) .case-photo-bg {
+  background:
+    radial-gradient(ellipse 60% 50% at 28% 38%, rgba(196,163,90,0.18) 0%, transparent 60%),
+    radial-gradient(ellipse 30% 40% at 75% 70%, rgba(196,163,90,0.07) 0%, transparent 55%),
+    linear-gradient(155deg, #1a1208 0%, #0a0a0a 45%, #1a1008 100%);
+}
+.case-study-block:nth-child(2) .case-photo-bg {
+  background:
+    radial-gradient(ellipse 55% 45% at 60% 30%, rgba(200,220,255,0.07) 0%, transparent 55%),
+    radial-gradient(ellipse 35% 35% at 20% 70%, rgba(196,163,90,0.08) 0%, transparent 55%),
+    linear-gradient(200deg, #0a0e18 0%, #0a0a0a 50%, #0c0e18 100%);
+}
+.case-study-block:nth-child(3) .case-photo-bg {
+  background:
+    radial-gradient(ellipse 50% 45% at 50% 48%, rgba(196,163,90,0.22) 0%, transparent 55%),
+    radial-gradient(ellipse 25% 30% at 15% 20%, rgba(196,163,90,0.08) 0%, transparent 55%),
+    linear-gradient(140deg, #1c1408 0%, #0a0a0a 40%, #1a1208 100%);
+}
+
+/* Stat caption bar at the bottom of the photo */
+.case-stat-bar {
+  background: rgba(10,10,10,0.9);
+  border-top: 1px solid rgba(196,163,90,0.2);
+  padding: 16px 28px;
+  display: flex;
+  align-items: center;
+  gap: 1.4rem;
+  flex-shrink: 0;
+}
+
+.case-stat-num {
   font-family: 'Cormorant Garamond', serif;
-  font-size: 6rem;
+  font-size: 2.6rem;
   font-weight: 300;
   color: var(--gold);
   line-height: 1;
+  flex-shrink: 0;
 }
 
-.case-metric-label {
-  font-size: 0.68rem;
-  letter-spacing: 0.22em;
+.case-stat-label {
+  font-size: 0.65rem;
+  letter-spacing: 0.18em;
   text-transform: uppercase;
   color: var(--text-on-dark);
+  line-height: 1.6;
+}
+
+/* Founder inline card (about-preview section, right column) */
+.founder-inline-card {
+  display: flex;
+  align-items: center;
+  gap: 1.2rem;
+  padding: 18px 22px;
+  background: var(--black-soft);
+  border: 1px solid rgba(196,163,90,0.18);
+  border-left: 2px solid var(--gold);
+  margin-top: 2rem;
+  margin-bottom: 2rem;
+}
+
+.founder-inline-monogram {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 1.6rem;
+  font-weight: 300;
+  color: var(--gold);
+  letter-spacing: 0.08em;
+  width: 46px;
+  height: 46px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: rgba(196,163,90,0.07);
+  flex-shrink: 0;
+}
+
+.founder-inline-card h5 {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 1.1rem;
+  font-weight: 300;
+  letter-spacing: 0.04em;
+  color: var(--warm-white);
+  margin-bottom: 0.25rem;
+}
+
+.founder-inline-card p {
+  font-size: 0.6rem;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: var(--gold);
+  font-weight: 500;
+  line-height: 1;
+  margin: 0;
+}
+
+/* Expertise visual — clickable affordance */
+.expertise-detail-visual {
+  cursor: zoom-in;
+}
+
+.expertise-detail-visual::after {
+  content: 'Tap to expand';
+  position: absolute;
+  bottom: 14px;
+  right: 18px;
+  font-size: 0.58rem;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: rgba(196,163,90,0.5);
+  font-weight: 500;
+  font-family: 'Montserrat', sans-serif;
+  transition: color 0.3s ease;
+}
+
+.expertise-detail-visual:hover::after { color: var(--gold); }
+
+/* Lightbox overlay */
+.lightbox-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 9000;
+  background: rgba(10,10,10,0.96);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  opacity: 0;
+  visibility: hidden;
+  transition: opacity 0.3s ease, visibility 0.3s ease;
+}
+
+.lightbox-overlay.open {
+  opacity: 1;
+  visibility: visible;
+}
+
+.lightbox-inner-content {
+  width: min(80vw, 820px);
+  aspect-ratio: 4/3;
+  background: var(--black-soft);
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-direction: column;
+  gap: 0.8rem;
+  border: 1px solid rgba(196,163,90,0.15);
+}
+
+.lightbox-close-btn {
+  position: fixed;
+  top: 22px;
+  right: 22px;
+  width: 44px;
+  height: 44px;
+  border: 1px solid rgba(196,163,90,0.35);
+  background: transparent;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--gold);
+  font-size: 1.1rem;
+  z-index: 9001;
+  font-family: 'Montserrat', sans-serif;
+  transition: all 0.2s;
+}
+
+.lightbox-close-btn:hover {
+  background: rgba(196,163,90,0.12);
+  border-color: var(--gold);
+}
+
+/* WhatsApp icon container override */
+.contact-icon svg {
+  width: 18px;
+  height: 18px;
+  fill: currentColor;
 }
 
 .case-content {
